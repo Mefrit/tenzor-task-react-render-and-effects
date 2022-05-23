@@ -1,85 +1,42 @@
 import { subscribe, unsubscribe } from './resources/API';
-import React from 'react';
 import { useEffect, useState } from 'react';
-let callBacks: any = [];
+let callBacks: any = new Map();
 
 export function Effects(props: { sourceId: string }) {
-    // let callBacks: any = []
-    // const [callBacks, setCallBacks] = useState([])
-    // const tabIdOne = React.unstable_useOpaqueIdentifier();
     const [message, setMessage] = useState('-1');
     const [sourceId, setSourceId] = useState('');
-    const callBack = (message: number) => {
-        setMessage(message.toString());
-    };
+
+    function unsubscribeByKey(key: string) {
+        unsubscribe(key, callBacks.get(key));
+        callBacks.delete(key);
+    }
+    function subscribeByKey(key: string, callBack: (message: number) => void) {
+        callBacks.delete(key);
+        callBacks.set(key, callBack);
+        subscribe(key, callBacks.get(key));
+    }
     useEffect(() => {
-        console.log('HGERE', props.sourceId);
-        if (callBacks[props.sourceId]) {
-            unsubscribe(props.sourceId, callBacks[props.sourceId]);
-            callBacks = callBacks.filter(
-                (elem: any, key: any, arr: any) => key !== props.sourceId,
-            );
-            // callBacks[props.sourceId] = undefined
+        if (props.sourceId === sourceId) {
+            return;
         }
-        // callBacks = [];
-    }, []);
-    useEffect(() => {
-        // if (props.sourceId === sourceId) {
-
-        //     return
-        // }
-
-        // if (callBacks[sourceId]) {
-        //     unsubscribe(sourceId, newCallBack[sourceId])
-        // }
-        console.log(
-            '\n\n useEffect ==> ',
-            sourceId,
-            ' +>> ',
-            props.sourceId,
-            callBacks,
-        );
+        const callBack = (message: number) => {
+            setMessage(message.toString());
+        };
         if (sourceId === '') {
             setSourceId(props.sourceId);
-            if (callBacks[props.sourceId]) {
-                console.log('unsubscribe 2 ', props.sourceId, callBacks);
-                unsubscribe(props.sourceId, callBacks[props.sourceId]);
-                callBacks = callBacks.filter(
-                    (elem: any, key: any, arr: any) => key !== props.sourceId,
-                );
+            if (callBacks.get(props.sourceId)) {
+                unsubscribeByKey(props.sourceId);
             }
-
-            // setCallBacks(newCallBack)
-            console.log(
-                '\n -----subscribe 0000',
-                sourceId,
-                ' props ',
-                props.sourceId,
-                callBacks,
-            );
-            callBacks[props.sourceId] = callBack;
-            subscribe(props.sourceId, callBacks[props.sourceId]);
+            subscribeByKey(props.sourceId, callBack);
         } else {
-            // console.log("unsubscribe", sourceId, props.sourceId, callBacks[sourceId], callBacks)
-            // if (callBacks[sourceId]) {
-            //     console.log("unsubscribe", sourceId, callBacks)
-            //     unsubscribe(sourceId, callBacks[sourceId])
-            //     callBacks = callBacks.filter((elem: any, key: any, arr: any) => key !== sourceId)
-            // }
-            if (callBacks[props.sourceId]) {
-                console.log('unsubscribe 2 ', props.sourceId, callBacks);
-                unsubscribe(props.sourceId, callBacks[props.sourceId]);
-
-                callBacks = callBacks.filter(
-                    (elem: any, key: any, arr: any) => key !== props.sourceId,
-                );
+            if (callBacks.get(sourceId)) {
+                unsubscribeByKey(sourceId);
             }
-            // setCallBacks(newCallBack)
+            if (callBacks.get(props.sourceId)) {
+                unsubscribeByKey(props.sourceId);
+            }
+            subscribeByKey(props.sourceId, callBack);
 
-            // unsubscribe(props.sourceId, newCallBack[sourceId])
-            console.log('subscribe1111', sourceId, props.sourceId, callBacks);
-            callBacks[props.sourceId] = callBack;
-            subscribe(props.sourceId, callBacks[props.sourceId]);
             setSourceId(props.sourceId);
         }
         setMessage('-1');
