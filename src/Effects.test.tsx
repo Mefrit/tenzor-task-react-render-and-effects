@@ -81,7 +81,11 @@ describe('Эффекты', () => {
         act(() => {
             fireEvent('test1', 1234);
         });
-
+        console.log(
+            '\n\n\n container.textContent',
+            container.textContent,
+            'test2: 4331',
+        );
         expect(container.textContent).toBe('test2: 4331');
     });
 

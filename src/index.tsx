@@ -16,6 +16,11 @@ function App() {
 
     return (
         <React.StrictMode>
+            <Effects sourceId={'test1'} />
+            <Effects sourceId={'test2'} />
+            <Effects sourceId={'test1'} />
+            {/* <Effects sourceId={'first'} />
+            <Effects sourceId={'second'} /> */}
             <Effects sourceId={currentSource} />
             <APIControls changeSource={changeSource} />
         </React.StrictMode>
