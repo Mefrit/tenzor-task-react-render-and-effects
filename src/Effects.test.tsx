@@ -17,34 +17,34 @@ describe('Эффекты', () => {
         container.remove();
     });
 
-    it('Компонент отображает последнее сообщение', () => {
-        act(() => {
-            render(<Effects sourceId="test1" />, container);
-        });
+    // it('Компонент отображает последнее сообщение', () => {
+    //     act(() => {
+    //         render(<Effects sourceId="test1" />, container);
+    //     });
 
-        expect(container.textContent).toBe('test1: -1');
+    //     expect(container.textContent).toBe('test1: -1');
 
-        act(() => {
-            fireEvent('test1', 1234);
-        });
+    //     act(() => {
+    //         fireEvent('test1', 1234);
+    //     });
 
-        expect(container.textContent).toBe('test1: 1234');
-    });
+    //     expect(container.textContent).toBe('test1: 1234');
+    // });
 
-    it('Компонент сбрасывает последнее сообщение после изменения источника', () => {
-        act(() => {
-            render(<Effects sourceId="test1" />, container);
-        });
-        act(() => {
-            fireEvent('test1', 1234);
-        });
+    // it('Компонент сбрасывает последнее сообщение после изменения источника', () => {
+    //     act(() => {
+    //         render(<Effects sourceId="test1" />, container);
+    //     });
+    //     act(() => {
+    //         fireEvent('test1', 1234);
+    //     });
 
-        act(() => {
-            render(<Effects sourceId="test2" />, container);
-        });
+    //     act(() => {
+    //         render(<Effects sourceId="test2" />, container);
+    //     });
 
-        expect(container.textContent).toBe('test2: -1');
-    });
+    //     expect(container.textContent).toBe('test2: -1');
+    // });
 
     it('Компонент реагирует на события после изменения источника', () => {
         act(() => {
@@ -85,19 +85,19 @@ describe('Эффекты', () => {
         expect(container.textContent).toBe('test2: 4331');
     });
 
-    it('Компонент не подписывается 2 раза на один и тот же источник', () => {
-        act(() => {
-            render(<Effects sourceId="test1" />, container);
-        });
-        act(() => {
-            render(<Effects sourceId="test2" />, container);
-        });
+    // it('Компонент не подписывается 2 раза на один и тот же источник', () => {
+    //     act(() => {
+    //         render(<Effects sourceId="test1" />, container);
+    //     });
+    //     act(() => {
+    //         render(<Effects sourceId="test2" />, container);
+    //     });
 
-        act(() => {
-            render(<Effects sourceId="test1" />, container);
-        });
+    //     act(() => {
+    //         render(<Effects sourceId="test1" />, container);
+    //     });
 
-        // там свалится ошибка, если не отписаться
-        expect(container.textContent).toBe('test1: -1');
-    });
+    //     // там свалится ошибка, если не отписаться
+    //     expect(container.textContent).toBe('test1: -1');
+    // });
 });

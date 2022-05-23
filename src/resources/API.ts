@@ -4,6 +4,7 @@ const handlers: Map<string, StatusChangeCallback> = new Map();
 
 export function subscribe(id: string, callback: StatusChangeCallback): void {
     const existingHandler = handlers.get(id);
+    console.log('\n\n existingHandlersubscribe  +++> ', handlers, id);
     if (existingHandler) {
         throw new Error(
             'Нельзя подписаться на изменение одного и того же источника несколько раз.' +
@@ -30,6 +31,7 @@ export function unsubscribe(id: string, callback: StatusChangeCallback): void {
 }
 
 export function fireEvent(id: string, payload: number) {
+    console.log('fireEvent ==> ', handlers, id);
     const existingHandler = handlers.get(id);
     if (existingHandler) {
         existingHandler(payload);
